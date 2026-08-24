@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SRIKRISHNA T | Senior Full Stack Developer</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Space+Grotesk:wght@300;400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  
+  <!-- GSAP & Plugins -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js"></script>
+  <!-- GSAP Flip Plugin -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/Flip.min.js"></script>
+</head>
+<!-- Full-Screen Project Flip Modal Container -->
+
+<body>
+
+  <!-- 1. Single 10-Second Video Background Preloader -->
+  <div id="preloader">
+    <video id="loaderVideo" src="public/bg/Loader%20bg.mp4" autoplay loop muted playsinline></video>
+    <div class="loader-overlay"></div>
+    <div class="loader-box">
+      <span id="counter">00</span>
+      <div class="loader-bar"><div class="bar-fill"></div></div>
+      <span class="loader-sub">INITIALIZING SYSTEM ARCHITECTURE...</span>
+    </div>
+  </div>
+
+  <!-- 2. Hero Section -->
+  <section class="hero-section">
+    <canvas id="hero-canvas"></canvas>
+
+    <div class="hud-layer">
+      <!-- Top Row -->
+      <div class="hud-top">
+        <div class="hud-badge"><span class="pulse-dot"></span> FULL STACK DEVELOPER</div>
+        <div class="hud-badge mono">5+ YRS EXP // CCaaS & AI</div>
+      </div>
+
+      <!-- Bottom Split Row -->
+      <div class="hud-bottom-row">
+        <!-- Left Bottom: Google Gemini Animated Glowing Card -->
+        <div class="gemini-glow-card">
+          <div class="gemini-glow-border"></div>
+          <div class="hud-left-action">
+            <h1 class="hero-name-title">SRIKRISHNA T</h1>
+            <p class="hero-sub">Full Stack Developer | React, React Native, Node.js & Real-time Systems</p>
+            <div class="hero-actions">
+              <a href="#projects" class="glow-btn">VIEW WORK</a>
+              <a href="#contact" class="ghost-btn">LET'S CONNECT</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Side: Status & Stats Box -->
+        <div class="hud-right-stats">
+          <div class="stat-cell">
+            <span class="lbl">CURRENT</span>
+            <span class="val">Colan Info Tech</span>
+          </div>
+          <div class="stat-cell">
+            <span class="lbl">CORE TECH</span>
+            <span class="val">MERN • React Native • Socket.IO</span>
+          </div>
+          <div class="stat-cell">
+            <span class="lbl">STATUS</span>
+            <span class="val cyan">AVAILABLE FOR HIRE</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Ambient Audio & Sound Effects -->
+  <audio id="bgMusic" src="public/bg/bg-audio.mp3" autoplay loop preload="auto"></audio>
+
+  <!-- Floating Audio Equalizer Control -->
+  <div class="audio-control" id="audioToggle" title="Toggle Sound">
+    <div class="eq-bars">
+      <span class="eq-bar bar1"></span>
+      <span class="eq-bar bar2"></span>
+      <span class="eq-bar bar3"></span>
+      <span class="eq-bar bar4"></span>
+    </div>
+    <span class="audio-label" id="audioStatus">SOUND: OFF</span>
+  </div>
+
+  <!-- Infinite Tech Marquee -->
+  <div class="marquee-wrapper">
+    <div class="marquee-track">
+      <span>REACT.JS</span> • <span>REACT NATIVE</span> • <span>NODE.JS</span> • <span>SOCKET.IO</span> • <span>TYPESCRIPT</span> • <span>MONGODB</span> • <span>REDUX TOOLKIT</span> • <span>FASTIFY</span> • <span>MATERIAL UI</span> • <span>ANT DESIGN</span> • <span>REST APIs</span> • <span>REAL-TIME CCaaS</span> •
+      <span>REACT.JS</span> • <span>REACT NATIVE</span> • <span>NODE.JS</span> • <span>SOCKET.IO</span> • <span>TYPESCRIPT</span> • <span>MONGODB</span> • <span>REDUX TOOLKIT</span> • <span>FASTIFY</span> • <span>MATERIAL UI</span> • <span>ANT DESIGN</span> • <span>REST APIs</span> • <span>REAL-TIME CCaaS</span> •
+    </div>
+  </div>
+
+  <!-- Global Motion Background Video -->
+  <div class="bg-motion-wrapper">
+    <video id="bgMotionVideo" src="public/bg/hyperspace.mp4" autoplay loop muted playsinline></video>
+    <div class="bg-motion-overlay"></div>
+  </div>
+
+  <!-- About Section -->
+  <section id="about" class="about-section">
+    <div class="about-container">
+      
+      <!-- Left Column -->
+      <div class="about-left">
+        <div class="about-tag-header">
+          <span class="mono-num">01 / ABOUT</span>
+          <span class="hud-pill-small">FULL STACK ARCHITECT</span>
+        </div>
+
+        <h2 class="serif-hero-title">
+          Building at the<br/>
+          <em>intersection of</em><br/>
+          code & creativity.
+        </h2>
+
+        <div class="about-description">
+          <p>
+            I'm <strong>Srikrishna</strong> — a Full Stack Developer with 5+ years of experience building scalable web and cross-platform mobile architectures. By day, I design real-time communication systems, CCaaS enterprise tools, and high-throughput MERN platforms.
+          </p>
+          <p>
+            I specialize in real-time Socket.IO synchronization, React Native native integrations, and AI-assisted automation pipelines. I believe the best engineering doesn't just solve problems — it tells stories with code.
+          </p>
+        </div>
+
+        <!-- Metric Counter Bar -->
+        <div class="about-stats-bar">
+          <div class="stat-block">
+            <span class="stat-num">5+</span>
+            <span class="stat-label">Years Experience</span>
+          </div>
+          <div class="stat-block">
+            <span class="stat-num">10+</span>
+            <span class="stat-label">Production Apps</span>
+          </div>
+          <div class="stat-block">
+            <span class="stat-num">2</span>
+            <span class="stat-label">Degrees in CS</span>
+          </div>
+          <div class="stat-block">
+            <span class="stat-num">MCA</span>
+            <span class="stat-label">Measi Inst. Tech</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column -->
+      <div class="about-right">
+        <div class="portrait-display-frame" data-tilt data-tilt-max="8" data-tilt-glare data-tilt-max-glare="0.2">
+          <div class="frame-reticle reticle-tl"></div>
+          <div class="frame-reticle reticle-tr"></div>
+          <div class="frame-reticle reticle-bl"></div>
+          <div class="frame-reticle reticle-br"></div>
+
+          <img src="public/frames/frame_0449.webp" alt="Srikrishna Portrait" class="portrait-main-img" />
+
+          <div class="floating-badge badge-top-right">
+            <span class="badge-dot"></span> Full Stack Dev
+          </div>
+          <div class="floating-badge badge-bottom-left">
+            <span class="badge-dot"></span> 5+ Yrs Exp
+          </div>
+          <div class="floating-badge badge-bottom-right">
+            <span class="badge-dot"></span> Chennai, IN
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 3D Curved Projects Carousel -->
+  <section id="projects" class="projects-carousel-section">
+    <div class="center-header">
+      <div class="sec-tag">PORTFOLIO SHOWCASE</div>
+      <h2 class="section-heading">Things I've <span>built.</span></h2>
+      <div class="carousel-counter"><span id="active-idx">01</span> / 10</div>
+    </div>
+
+    <div class="carousel-stage">
+      <div class="carousel-track" id="carouselTrack">
+        
+        <!-- 1: Zydco ATS -->
+        <div class="card-3d" data-index="0">
+          <div class="card-top-banner banner-green">
+            <div class="banner-diagram">● ─── ■ ─── ▲</div>
+            <span class="status-pill">AI LIVE</span>
+          </div>
+          <div class="card-body">
+            <span class="card-sub-num">01 / 10</span>
+            <h3>Zydco - Talent (ATS)</h3>
+            <p class="card-short-desc">Cloud ATS with AI-driven resume scoring, recruiter analytics pipelines, automated shortlisting, and assessments.</p>
+            
+            <div class="project-expanded-details">
+              <div class="detail-block">
+                <h4>System Architecture</h4>
+                <p>Engineered an automated parsing engine utilizing Python NLP models to extract candidate profiles from unstructured PDF/Word resumes. Connected with a high-speed React dashboard for recruiter pipelines.</p>
+              </div>
+              <div class="detail-block">
+                <h4>Key Impact & Metrics</h4>
+                <p>Reduced candidate shortlisting screening time by 65% and processed over 20,000+ candidate profiles in production with automated scoring algorithms.</p>
+              </div>
+            </div>
+
+            <div class="tag-chips">
+              <span>React.js</span><span>Python AI</span><span>Node.js</span><span>MongoDB</span><span>NLP</span>
+            </div>
+            <div class="card-footer">
+             <!-- Example on Card 1 (Repeat for all 10 cards with their corresponding index) -->
+<!-- <button type="button" class="card-btn" data-project-index="0">Explore</button> -->
+            </div>
+          </div>
+        </div>
+
+        <!-- 2: Worktual Contact Center -->
+        <div class="card-3d" data-index="1">
+          <div class="card-top-banner banner-orange">
+            <div class="banner-diagram">📈 ─── 📊 ─── 📉</div>
+            <span class="status-pill">ENTERPRISE</span>
+          </div>
+          <div class="card-body">
+            <span class="card-sub-num">02 / 10</span>
+            <h3>Worktual Contact Center</h3>
+            <p class="card-short-desc">Omnichannel mobile app with DID routing queues, audio call recording, chat systems, and analytics charts.</p>
+            
+            <div class="project-expanded-details">
+              <div class="detail-block">
+                <h4>System Architecture</h4>
+                <p>Built a production cross-platform React Native app integrating direct SIP telephony streams, live queue statistics via WebSockets, and encrypted voice playback pipelines.</p>
+              </div>
+              <div class="detail-block">
+                <h4>Key Impact & Metrics</h4>
+                <p>Supported over 500+ active enterprise call center agents with zero dropped telemetry sessions and real-time audio waveform visualization.</p>
+              </div>
+            </div>
+
+            <div class="tag-chips">
+              <span>React Native</span><span>WebSockets</span><span>SIP Telephony</span><span>Redux Toolkit</span>
+            </div>
+            <div class="card-footer">
+              <!-- <button type="button" class="card-btn" data-project-index="1">Explore</button> -->
+            </div>
+          </div>
+        </div>
+
+        <!-- 3: UCaaS Cloud Platform -->
+        <div class="card-3d" data-index="2">
+          <div class="card-top-banner banner-purple">
+            <div class="banner-diagram">⚡ ─── 💬 ─── 🔄</div>
+            <span class="status-pill">REALTIME</span>
+          </div>
+          <div class="card-body">
+            <span class="card-sub-num">03 / 10</span>
+            <h3>UCaaS Cloud Platform</h3>
+            <p class="card-short-desc">Unified Communication platform with real-time Socket.IO chat, audio/video conferencing, and RBAC security.</p>
+            
+            <div class="project-expanded-details">
+              <div class="detail-block">
+                <h4>System Architecture</h4>
+                <p>Designed a microservices-based communication suite featuring instant team messaging, WebRTC video calling channels, presence status broadcasting, and file attachment handling.</p>
+              </div>
+              <div class="detail-block">
+                <h4>Key Impact & Metrics</h4>
+                <p>Delivered sub-50ms message latency across distributed clusters with Redis Pub/Sub adapter scaling.</p>
+              </div>
+            </div>
+
+            <div class="tag-chips">
+              <span>React</span><span>Socket.IO</span><span>Express</span><span>WebRTC</span><span>Redis</span>
+            </div>
+            <div class="card-footer">
+              <!-- <button type="button" class="card-btn" data-project-index="2">Explore</button> -->
+            </div>
+          </div>
+        </div>
+
+        <!-- 4: AudraCare Mobile -->
+        <div class="card-3d" data-index="3">
+          <div class="card-top-banner banner-cyan">
+            <div class="banner-diagram">🏥 ─── 🩺 ─── 📋</div>
+            <span class="status-pill">HEALTHCARE</span>
+          </div>
+          <div class="card-body">
+            <span class="card-sub-num">04 / 10</span>
+            <h3>AudraCare Mobile</h3>
+            <p class="card-short-desc">Digital care-management app for healthcare facilities with native camera cropping and visual record tracking.</p>
+            
+            <div class="project-expanded-details">
+              <div class="detail-block">
+                <h4>System Architecture</h4>
+                <p>Developed cross-platform mobile modules utilizing native device camera integrations, image perspective transforms, and encrypted offline storage for medical diagnostics.</p>
+              </div>
+              <div class="detail-block">
+                <h4>Key Impact & Metrics</h4>
+                <p>Adopted by healthcare professionals to digitize and synchronize patient records across hospital management systems in real-time.</p>
+              </div>
+            </div>
+
+            <div class="tag-chips">
+              <span>React Native</span><span>Native Camera</span><span>SQLite</span><span>DataViz</span>
+            </div>
+            <div class="card-footer">
+              <!-- <button type="button" class="card-btn" data-project-index="3">Explore</button> -->
+            </div>
+          </div>
+        </div>
+
+        <!-- 5: CCaaS Agent Platform -->
+        <div class="card-3d" data-index="4">
+          <div class="card-top-banner banner-blue">
+            <div class="banner-diagram">🎧 ─── 📞 ─── 🔀</div>
+            <span class="status-pill">CCaaS</span>
+          </div>
+          <div class="card-body">
+            <span class="card-sub-num">05 / 10</span>
+            <h3>CCaaS Agent Platform</h3>
+            <p class="card-short-desc">High-throughput customer experience system for inbound interaction routing with dynamic sorting dashboards.</p>
+            
+            <div class="project-expanded-details">
+              <div class="detail-block">
+                <h4>System Architecture</h4>
+                <p>Constructed an enterprise contact center agent console with split customer journey panels, ticket history lookup, and omnichannel interaction routing using Ant Design and Redux.</p>
+              </div>
+              <div class="detail-block">
+                <h4>Key Impact & Metrics</h4>
+                <p>Achieved seamless handling of 10,000+ daily customer tickets with real-time SLA breach warnings and automated response suggestions.</p>
+              </div>
+            </div>
+
+            <div class="tag-chips">
+              <span>React.js</span><span>Ant Design</span><span>Redux</span><span>REST APIs</span>
+            </div>
+            <div class="card-footer">
+              <!-- <button type="button" class="card-btn" data-project-index="4">Explore</button> -->
+            </div>
+          </div>
+        </div>
+
+        <!-- 6: Awesome Events -->
+        <div class="card-3d" data-index="5">
+          <div class="card-top-banner banner-pink">
+            <div class="banner-diagram">🎟️ ─── 📅 ─── 🏢</div>
+            <span class="status-pill">BOOKINGS</span>
+          </div>
+          <div class="card-body">
+            <span class="card-sub-num">06 / 10</span>
+            <h3>Awesome Events</h3>
+            <p class="card-short-desc">Full-stack event discovery and booking platform featuring MUI DataGrids and multi-tab Formik workflows.</p>
+            
+            <div class="project-expanded-details">
+              <div class="detail-block">
+                <h4>System Architecture</h4>
+                <p>Built a full-scale booking engine with dynamic seating matrices, payment gateway integrations, automated ticket PDF generation, and multi-step organizer validation forms.</p>
+              </div>
+              <div class="detail-block">
+                <h4>Key Impact & Metrics</h4>
+                <p>Handled high-concurrency ticket release traffic with atomic inventory reservations preventing double-booking errors.</p>
+              </div>
+            </div>
+
+            <div class="tag-chips">
+              <span>MERN Stack</span><span>MUI DataGrid</span><span>Formik</span><span>Stripe API</span>
+            </div>
+            <div class="card-footer">
+              <!-- <button type="button" class="card-btn" data-project-index="5">Explore</button> -->
+            </div>
+          </div>
+        </div>
+
+        <!-- 7: LiveSync Chat Engine -->
+        <div class="card-3d" data-index="6">
+          <div class="card-top-banner banner-green">
+            <div class="banner-diagram">💬 ─── ⚡ ─── 🛰️</div>
+            <span class="status-pill">SOCKET</span>
+          </div>
+          <div class="card-body">
+            <span class="card-sub-num">07 / 10</span>
+            <h3>LiveSync Chat Engine</h3>
+            <p class="card-short-desc">Low-latency socket infrastructure supporting typing indicators, live presence, and cross-tab synchronization.</p>
+            
+            <div class="project-expanded-details">
+              <div class="detail-block">
+                <h4>System Architecture</h4>
+                <p>Architected a standalone WebSocket microservice featuring broadcast rooms, offline message delivery queues, and multi-device session sync.</p>
+              </div>
+              <div class="detail-block">
+                <h4>Key Impact & Metrics</h4>
+                <p>Maintained stable connection pools for 50,000+ concurrent clients with automated reconnection and packet acknowledgment.</p>
+              </div>
+            </div>
+
+            <div class="tag-chips">
+              <span>Socket.IO</span><span>Node.js</span><span>Redis Streams</span><span>Docker</span>
+            </div>
+            <div class="card-footer">
+              <!-- <button type="button" class="card-btn" data-project-index="6">Explore</button> -->
+            </div>
+          </div>
+        </div>
+
+        <!-- 8: Secure Iframe Widget -->
+        <div class="card-3d" data-index="7">
+          <div class="card-top-banner banner-orange">
+            <div class="banner-diagram">🛡️ ─── 🔲 ─── 🌐</div>
+            <span class="status-pill">SECURITY</span>
+          </div>
+          <div class="card-body">
+            <span class="card-sub-num">08 / 10</span>
+            <h3>Secure Iframe Widget</h3>
+            <p class="card-short-desc">Embedded third-party widget resolving CSP, X-Frame-Options, secure postMessage, and responsive scaling.</p>
+            
+            <div class="project-expanded-details">
+              <div class="detail-block">
+                <h4>System Architecture</h4>
+                <p>Created a lightweight embeddable client SDK facilitating secure cross-origin communication between host pages and embedded web apps via strongly typed postMessage handshakes.</p>
+              </div>
+              <div class="detail-block">
+                <h4>Key Impact & Metrics</h4>
+                <p>Eliminated cross-site framing security risks while enabling dynamic auto-resizing with zero layout shifts for partner sites.</p>
+              </div>
+            </div>
+
+            <div class="tag-chips">
+              <span>TypeScript</span><span>PostMessage</span><span>CSP</span><span>Vanilla JS</span>
+            </div>
+            <div class="card-footer">
+              <!-- <button type="button" class="card-btn" data-project-index="7">Explore</button> -->
+            </div>
+          </div>
+        </div>
+
+        <!-- 9: OmniMedia Hub -->
+        <div class="card-3d" data-index="8">
+          <div class="card-top-banner banner-purple">
+            <div class="banner-diagram">📱 ─── 🎙️ ─── 📸</div>
+            <span class="status-pill">NATIVE</span>
+          </div>
+          <div class="card-body">
+            <span class="card-sub-num">09 / 10</span>
+            <h3>OmniMedia Hub</h3>
+            <p class="card-short-desc">React Native utility module implementing background audio recording and native gallery picker pipelines.</p>
+            
+            <div class="project-expanded-details">
+              <div class="detail-block">
+                <h4>System Architecture</h4>
+                <p>Engineered native bridge modules interfacing with iOS AVFoundation and Android MediaRecorder for crystal-clear background audio capture and multi-file gallery selection.</p>
+              </div>
+              <div class="detail-block">
+                <h4>Key Impact & Metrics</h4>
+                <p>Delivered low-overhead media compression saving 40% upload bandwidth without losing voice recording fidelity.</p>
+              </div>
+            </div>
+
+            <div class="tag-chips">
+              <span>React Native</span><span>Reanimated</span><span>Xcode</span><span>Android SDK</span>
+            </div>
+            <div class="card-footer">
+              <!-- <button type="button" class="card-btn" data-project-index="8">Explore</button> -->
+            </div>
+          </div>
+        </div>
+
+        <!-- 10: Enterprise RBAC Gateway -->
+        <div class="card-3d" data-index="9">
+          <div class="card-top-banner banner-cyan">
+            <div class="banner-diagram">🔐 ─── 🔑 ─── 🚪</div>
+            <span class="status-pill">GATEWAY</span>
+          </div>
+          <div class="card-body">
+            <span class="card-sub-num">10 / 10</span>
+            <h3>Enterprise RBAC Gateway</h3>
+            <p class="card-short-desc">Scalable authentication microservice featuring JWT lifecycle management and granular role permissions.</p>
+            
+            <div class="project-expanded-details">
+              <div class="detail-block">
+                <h4>System Architecture</h4>
+                <p>Engineered an enterprise authentication proxy with rotating refresh tokens, rate limiting, and hierarchical role-based access control (RBAC) middleware across distributed endpoints.</p>
+              </div>
+              <div class="detail-block">
+                <h4>Key Impact & Metrics</h4>
+                <p>Protected internal microservice clusters from unauthorized access and brute-force attempts with sub-5ms token verification times.</p>
+              </div>
+            </div>
+
+            <div class="tag-chips">
+              <span>Node.js</span><span>Express</span><span>JWT</span><span>Bcrypt</span><span>Redis</span>
+            </div>
+            <div class="card-footer">
+              <!-- <button type="button" class="card-btn" data-project-index="9">Explore</button> -->
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Carousel Controls -->
+    <div class="carousel-nav-bar">
+      <button class="c-arrow prev-btn" id="prevCard">❮</button>
+      <div class="c-dots" id="cDots"></div>
+      <button class="c-arrow next-btn" id="nextCard">❯</button>
+    </div>
+  </section>
+
+<!-- ================= MY TOOLKIT SECTION ================= -->
+  <section id="toolkit" class="toolkit-section">
+    <div class="toolkit-container">
+      
+      <!-- Left Column: Title & Interactive Category Badges -->
+      <div class="toolkit-left">
+        <div class="sec-tag">CAPABILITIES & ARSENAL</div>
+        <h2 class="toolkit-serif-title">My Toolkit.</h2>
+        
+        <!-- Interactive Category Switcher Nav -->
+        <div class="toolkit-tabs-nav">
+          <button class="t-nav-btn active" data-tab="0">01 // AI PROMPT & ENG</button>
+          <button class="t-nav-btn" data-tab="1">02 // FRONTEND</button>
+          <button class="t-nav-btn" data-tab="2">03 // MOBILE</button>
+          <button class="t-nav-btn" data-tab="3">04 // BACKEND</button>
+        </div>
+
+        <!-- Dynamic Category Content Panels -->
+        <div class="toolkit-panels-stage">
+          
+          <!-- 01: AI Prompt & Engineer -->
+          <div class="toolkit-panel active" id="t-panel-0">
+            <div class="t-panel-header">
+              <span class="t-panel-role">● AI Prompt & Engineering</span>
+              <p class="t-panel-desc">Designing deterministic prompts, LLM workflow integrations, and automated AI assistance pipelines.</p>
+            </div>
+            <div class="t-chips-grid">
+              <span class="t-chip">Prompt Engineering</span>
+              <span class="t-chip">OpenAI / Claude API</span>
+              <span class="t-chip">LangChain Basics</span>
+              <span class="t-chip">AI Workflow Agents</span>
+              <span class="t-chip">Context Tuning</span>
+              <span class="t-chip">Model Orchestration</span>
+            </div>
+          </div>
+
+          <!-- 02: Frontend -->
+          <div class="toolkit-panel" id="t-panel-1">
+            <div class="t-panel-header">
+              <span class="t-panel-role">● Frontend Architecture</span>
+              <p class="t-panel-desc">Building responsive, high-performance web applications with state synchronization and smooth motion graphics.</p>
+            </div>
+            <div class="t-chips-grid">
+              <span class="t-chip">React.js</span>
+              <span class="t-chip">TypeScript</span>
+              <span class="t-chip">Redux Toolkit</span>
+              <span class="t-chip">GSAP & Motion</span>
+              <span class="t-chip">Material UI</span>
+              <span class="t-chip">Ant Design</span>
+              <span class="t-chip">HTML5 Canvas</span>
+              <span class="t-chip">Tailwind CSS</span>
+            </div>
+          </div>
+
+          <!-- 03: Mobile -->
+          <div class="toolkit-panel" id="t-panel-2">
+            <div class="t-panel-header">
+              <span class="t-panel-role">● Mobile Systems</span>
+              <p class="t-panel-desc">Cross-platform iOS and Android mobile development with hardware-level integrations and background thread execution.</p>
+            </div>
+            <div class="t-chips-grid">
+              <span class="t-chip">React Native</span>
+              <span class="t-chip">Expo Bare Workflow</span>
+              <span class="t-chip">Audio & Voice Record</span>
+              <span class="t-chip">Camera & Media Cropping</span>
+              <span class="t-chip">Native Device Permissions</span>
+              <span class="t-chip">Push Notifications</span>
+            </div>
+          </div>
+
+          <!-- 04: Backend -->
+          <div class="toolkit-panel" id="t-panel-3">
+            <div class="t-panel-header">
+              <span class="t-panel-role">● Backend & Realtime</span>
+              <p class="t-panel-desc">Scalable distributed APIs, CCaaS telephony interaction routing, low-latency WebSockets, and database indexing.</p>
+            </div>
+            <div class="t-chips-grid">
+              <span class="t-chip">Node.js</span>
+              <span class="t-chip">Express.js</span>
+              <span class="t-chip">Socket.IO Realtime</span>
+              <span class="t-chip">MongoDB & Mongoose</span>
+              <span class="t-chip">JWT & RBAC Security</span>
+              <span class="t-chip">REST APIs</span>
+              <span class="t-chip">Postman & Unit Testing</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Right Column: Animated Typography & Particle Matrix Screen -->
+      <div class="toolkit-right">
+        <div class="toolkit-screen-frame" data-tilt data-tilt-max="6" data-tilt-glare data-tilt-max-glare="0.2">
+          
+          <!-- Corner Framing Reticles -->
+          <div class="frame-reticle reticle-tl"></div>
+          <div class="frame-reticle reticle-tr"></div>
+          <div class="frame-reticle reticle-bl"></div>
+          <div class="frame-reticle reticle-br"></div>
+
+          <!-- Background Canvas for Particle Glow -->
+          <canvas id="toolkitCanvas"></canvas>
+
+          <!-- Large Center Animated Category Text -->
+          <div class="toolkit-big-display">
+            <h1 class="t-giant-text" id="toolkitGiantText">AI</h1>
+            <span class="t-giant-sub" id="toolkitGiantSub">INTELLIGENCE // AGENTS</span>
+          </div>
+
+          <div class="screen-scanline"></div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- Let's Connect Section -->
+  <section id="contact" class="connect-section">
+    <div class="connect-container">
+      
+      <!-- Left Column: Content + Identity Card -->
+      <div class="connect-left">
+        <div class="sec-tag">INITIATE COMMUNICATION</div>
+        <h2 class="section-heading">Let's <span>connect.</span></h2>
+        <p class="connect-bio">
+          Have an upcoming project, system architecture inquiry, or full-stack opportunity? Send a transmission or reach out through direct communication channels.
+        </p>
+
+        <!-- Identity Card -->
+        <div class="id-card-frame" data-tilt data-tilt-max="10" data-tilt-glare data-tilt-max-glare="0.3">
+          <div class="id-card-body">
+            <img src="public/frames/frame_0449.webp" alt="Srikrishna T Character" class="id-avatar" />
+            <div class="id-details">
+              <h3>SRIKRISHNA T</h3>
+              <span class="id-role">Full Stack Developer</span>
+              <div class="edu-tags">
+                <p>🎓 M.C.A. Master of Computer Applications (MEASI)</p>
+                <p>🎓 B.C.A. Bachelor of Computer Applications (SVEC)</p>
+              </div>
+              <div class="id-buttons">
+                <a href="tel:9094594497" class="id-btn">📞 +91 9094594497</a>
+                <a href="mailto:krishkrishna12437@gmail.com" class="id-btn">✉️ krishkrishna12437@gmail.com</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Sci-Fi Form -->
+      <div class="connect-right" data-tilt data-tilt-max="8" data-tilt-glare data-tilt-max-glare="0.2">
+        <form class="sci-fi-form" id="contactForm" onsubmit="event.preventDefault(); handleFormSubmit();">
+          <div class="form-header">
+            <span class="form-title">TRANSMISSION PORTAL</span>
+            <span class="hud-pill mono">ENCRYPTED // TLS</span>
+          </div>
+
+          <div class="input-group">
+            <label for="name">IDENTIFIER / NAME</label>
+            <input type="text" id="name" required placeholder="e.g. Alex Mercer" autocomplete="off" />
+            <div class="input-glow-line"></div>
+          </div>
+
+          <div class="input-group">
+            <label for="email">RETURN ADDRESS / EMAIL</label>
+            <input type="email" id="email" required placeholder="name@domain.com" autocomplete="off" />
+            <div class="input-glow-line"></div>
+          </div>
+
+          <div class="input-group">
+            <label for="subject">PROJECT DOMAIN / SUBJECT</label>
+            <select id="subject" class="styled-select">
+              <option value="Full Stack Architecture">Full Stack Web Architecture</option>
+              <option value="Mobile App (React Native)">Mobile App (React Native)</option>
+              <option value="Real-time / Socket.IO">Real-time / Socket.IO Integration</option>
+              <option value="Consulting / Other">Consulting / Other</option>
+            </select>
+            <div class="input-glow-line"></div>
+          </div>
+
+          <div class="input-group">
+            <label for="message">MESSAGE PAYLOAD</label>
+            <textarea id="message" rows="5" required placeholder="Describe project specifications, timeline, or inquiries..."></textarea>
+            <div class="input-glow-line"></div>
+          </div>
+
+          <button type="submit" class="submit-btn" id="submitBtn">
+            <span class="btn-text">TRANSMIT MESSAGE</span>
+          </button>
+        </form>
+      </div>
+
+    </div>
+  </section>
+
+  <div id="projectModal" class="project-flip-modal">
+  <button class="modal-close-btn" id="closeProjectModal">✕ CLOSE</button>
+  <div class="modal-card-slot" id="modalSlot"></div>
+</div>
+
+  <script src="main.js"></script>
+</body>
+</html>
