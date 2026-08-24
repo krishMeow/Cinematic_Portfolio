@@ -10,7 +10,7 @@ gsap.registerPlugin(ScrollTrigger, Flip);
 const canvas = document.getElementById("hero-canvas");
 const ctx = canvas.getContext("2d");
 const frameCount = 520;
-const framePath = (i) => `public/frames/frame_${(i + 1).toString().padStart(4, "0")}.webp`;
+const framePath = (i) => `/public/frames/frame_${(i + 1).toString().padStart(4, "0")}.webp`;
 const images = [];
 const sequence = { frame: 0 };
 let loadedImagesCount = 0;
