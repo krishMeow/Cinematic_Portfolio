@@ -14,6 +14,7 @@ const framePath = (i) => `public/frames/frame_${(i + 1).toString().padStart(4, "
 const images = [];
 const sequence = { frame: 0 };
 let loadedImagesCount = 0;
+ 
 
 // Canvas Resize Function
 function resizeCanvas() {
