@@ -63,19 +63,37 @@ for (let i = 0; i < frameCount; i++) {
 }
 
 // 3. Ambient Audio Manager
+// Ambient Audio Manager with User-Interaction Fallback
 const bgAudio = document.getElementById("bgMusic");
 const audioToggle = document.getElementById("audioToggle");
 const audioStatus = document.getElementById("audioStatus");
 let isAudioPlaying = false;
 
-if (bgAudio) {
+function playAudioStream() {
+  if (!bgAudio) return;
   bgAudio.volume = 0.45;
   bgAudio.play().then(() => {
     isAudioPlaying = true;
     audioToggle?.classList.add("playing");
     if (audioStatus) audioStatus.innerText = "SOUND: ON";
-  }).catch(() => {});
+  }).catch(() => {
+    if (audioStatus) audioStatus.innerText = "SOUND: OFF";
+  });
 }
+
+// Attempt immediate playback
+playAudioStream();
+
+// First-click unlock fallback if blocked by browser policy
+const unlockAudioOnFirstClick = () => {
+  if (!isAudioPlaying) {
+    playAudioStream();
+  }
+  window.removeEventListener("click", unlockAudioOnFirstClick);
+  window.removeEventListener("touchstart", unlockAudioOnFirstClick);
+};
+window.addEventListener("click", unlockAudioOnFirstClick);
+window.addEventListener("touchstart", unlockAudioOnFirstClick);
 
 function toggleAudio() {
   if (!bgAudio) return;

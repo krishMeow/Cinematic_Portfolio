@@ -72,7 +72,7 @@ A modern, tech-forward cinematic portfolio showcasing scalable architectures, re
 ├── main.js                 # GSAP engine, Flip controllers & canvas scrubbing
 └── public/
     ├── bg/
-    │   ├── Loader bg.mp4   # Sci-fi tunnel background video
+    │   ├── Loader-bg.mp4   # Sci-fi tunnel background video
     │   ├── hyperspace.mp4  # Global background motion video
     │   └── bg-audio.mp3    # Ambient soundscape
     └── frames/             # Sequence assets (frame_0001.webp - frame_0520.webp)
