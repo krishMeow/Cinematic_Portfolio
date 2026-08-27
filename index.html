@@ -80,40 +80,38 @@
     </div>
   </section>
 
-    <!-- MICROPHONE PERMISSION GATE -->
+<!-- UNMUTE IN BROWSER / MICROPHONE GATE -->
 <div id="mediaGate" class="media-gate">
-
-    <div class="media-gate-box">
-
-        <div class="media-gate-icon">
-            🎙️
-        </div>
-
-        <h2>ENABLE AUDIO</h2>
-
-        <p>
-            Allow microphone access to enable the
-            interactive audio experience.
-        </p>
-
-        <div class="media-gate-actions">
-
-            <button
-                type="button"
-                id="btnGrantMedia">
-                ENABLE SOUND FOR BETTER EXPERIENCE
-            </button>
-
-            <button
-                type="button"
-                id="btnSkipMedia">
-                SKIP
-            </button>
-
-        </div>
-
+  <div class="media-gate-box">
+    <div class="media-gate-icon">🔇</div>
+    <h2>UNMUTE IN BROWSER</h2>
+    <p>Chrome has muted sound on this site. Follow these steps to allow audio:</p>
+    
+    <!-- Step-by-Step Instructions -->
+    <div class="settings-help-box">
+      <div class="help-step">
+        <span class="step-num">1</span>
+        <span>Look at the <strong>top-right corner</strong> of your browser URL bar for the <strong>Muted Speaker icon (🔇)</strong>.</span>
+      </div>
+      <div class="help-step">
+        <span class="step-num">2</span>
+        <span>Click the icon and select <strong>"Always allow sound on this site"</strong>.</span>
+      </div>
+      <div class="help-step">
+        <span class="step-num">3</span>
+        <span>Click <strong>"Done"</strong>, then press the launch button below.</span>
+      </div>
     </div>
 
+    <div class="media-gate-actions">
+      <button type="button" id="btnGrantMedia">
+        ENABLE MICROPHONE AND SOUND FOR BETTER EXPERIENCE
+      </button>
+      <button type="button" id="btnSkipMedia">
+        CONTINUE WITHOUT AUDIO
+      </button>
+    </div>
+  </div>
 </div>
 
   <!-- Ambient Audio & Sound Effects -->

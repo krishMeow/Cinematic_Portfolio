@@ -641,7 +641,7 @@ window.addEventListener("keydown", (e) => {
   if (e.key === "Escape") closeCardModal();
 });
 
-// ================= NATIVE MICROPHONE GATE & CONTROLLER =================
+// ================= UNMUTE IN BROWSER GATE & CONTROLLER =================
 const mediaGate = document.getElementById("mediaGate");
 const btnGrantMedia = document.getElementById("btnGrantMedia");
 const btnSkipMedia = document.getElementById("btnSkipMedia");
@@ -654,7 +654,6 @@ function dismissMediaGateAndStart(audioEnabled) {
       ease: "power2.out",
       onComplete: () => {
         mediaGate.style.display = "none";
-        mediaGate.classList.remove("active");
       },
     });
   }
@@ -668,6 +667,7 @@ function dismissMediaGateAndStart(audioEnabled) {
   startPreloader();
 }
 
+// Check existing permission state
 async function checkMicrophonePermission() {
   try {
     if (navigator.permissions && navigator.permissions.query) {
@@ -686,44 +686,39 @@ async function checkMicrophonePermission() {
       };
     }
   } catch (error) {
-    console.log("Could not query microphone permission directly:", error);
+    console.log("Permissions API query fallback:", error);
   }
 
+  // Show UNMUTE IN BROWSER modal directly
   if (mediaGate) {
     mediaGate.style.display = "flex";
   }
 }
 
-// Trigger initial check
 checkMicrophonePermission();
 
-// Enable Microphone button handler
-if (btnGrantMedia) {
-  btnGrantMedia.addEventListener("click", async function (event) {
-    event.preventDefault();
-    event.stopPropagation();
+// Handle "ENABLE MICROPHONE AND SOUND FOR BETTER EXPERIENCE" Click
+btnGrantMedia?.addEventListener("click", async function (event) {
+  event.preventDefault();
+  event.stopPropagation();
 
-    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-      dismissMediaGateAndStart(false);
-      return;
-    }
-
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      stream.getTracks().forEach((track) => track.stop());
-      dismissMediaGateAndStart(true);
-    } catch (error) {
-      console.warn("Microphone access denied by user:", error);
-      dismissMediaGateAndStart(false);
-    }
-  });
-}
-
-// Skip button handler
-if (btnSkipMedia) {
-  btnSkipMedia.addEventListener("click", function (event) {
-    event.preventDefault();
-    event.stopPropagation();
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
     dismissMediaGateAndStart(false);
-  });
-}
+    return;
+  }
+
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    stream.getTracks().forEach((track) => track.stop());
+    dismissMediaGateAndStart(true);
+  } catch (error) {
+    console.warn("Microphone access denied or unmuted without hardware stream:", error);
+    dismissMediaGateAndStart(false);
+  }
+});
+
+// Skip Button
+btnSkipMedia?.addEventListener("click", (e) => {
+  e.preventDefault();
+  dismissMediaGateAndStart(false);
+});
