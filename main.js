@@ -2,7 +2,6 @@
 if (history.scrollRestoration) {
   history.scrollRestoration = "manual";
 }
-
 window.scrollTo(0, 0);
 
 // Register GSAP Plugins ONCE
@@ -12,12 +11,11 @@ const canvas = document.getElementById("hero-canvas");
 const ctx = canvas.getContext("2d");
 const frameCount = 520;
 const framePath = (i) =>
-  `/public/frames/frame_${(i + 1).toString().padStart(4, "0")}.webp`;
+  `public/frames/frame_${(i + 1).toString().padStart(4, "0")}.webp`;
 
 const images = [];
 const sequence = { frame: 0 };
 let loadedImagesCount = 0;
-
 
 // 2. Canvas Resize Function
 function resizeCanvas() {
@@ -25,25 +23,19 @@ function resizeCanvas() {
   canvas.height = window.innerHeight;
   render();
 }
-
 window.addEventListener("resize", resizeCanvas);
 
 function render() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-
   const img = images[sequence.frame];
-
   if (!img || !img.complete) return;
 
   const hRatio = canvas.width / img.width;
   const vRatio = canvas.height / img.height;
   const ratio = Math.min(hRatio, vRatio);
 
-  const centerShiftX =
-    (canvas.width - img.width * ratio) / 2;
-
-  const centerShiftY =
-    (canvas.height - img.height * ratio) / 2;
+  const centerShiftX = (canvas.width - img.width * ratio) / 2;
+  const centerShiftY = (canvas.height - img.height * ratio) / 2;
 
   ctx.drawImage(
     img,
@@ -58,185 +50,108 @@ function render() {
   );
 }
 
-
 // 3. Preload Canvas Frames in Background
 for (let i = 0; i < frameCount; i++) {
   const img = new Image();
-
   img.src = framePath(i);
-
   img.onload = () => {
     loadedImagesCount++;
-
     if (loadedImagesCount === 1) {
       sequence.frame = 0;
       resizeCanvas();
     }
   };
-
   images.push(img);
 }
 
-
 // 4. Ambient Audio Manager
-// Ambient Audio Manager with User-Interaction Fallback
 const bgAudio = document.getElementById("bgMusic");
 const audioToggle = document.getElementById("audioToggle");
 const audioStatus = document.getElementById("audioStatus");
-
 let isAudioPlaying = false;
 
 function playAudioStream() {
   if (!bgAudio) return;
-
   bgAudio.volume = 0.45;
-
   bgAudio
     .play()
     .then(() => {
       isAudioPlaying = true;
-
       audioToggle?.classList.add("playing");
-
-      if (audioStatus) {
-        audioStatus.innerText = "SOUND: ON";
-      }
+      if (audioStatus) audioStatus.innerText = "SOUND: ON";
     })
     .catch(() => {
-      if (audioStatus) {
-        audioStatus.innerText = "SOUND: OFF";
-      }
+      if (audioStatus) audioStatus.innerText = "SOUND: OFF";
     });
 }
 
-
-// Attempt immediate playback
-playAudioStream();
-
-
-// First-click unlock fallback if blocked by browser policy
-const unlockAudioOnFirstClick = () => {
-  if (!isAudioPlaying) {
-    playAudioStream();
-  }
-
-  window.removeEventListener(
-    "click",
-    unlockAudioOnFirstClick
-  );
-
-  window.removeEventListener(
-    "touchstart",
-    unlockAudioOnFirstClick
-  );
-};
-
-window.addEventListener(
-  "click",
-  unlockAudioOnFirstClick
-);
-
-window.addEventListener(
-  "touchstart",
-  unlockAudioOnFirstClick
-);
-
-
 function toggleAudio() {
   if (!bgAudio) return;
-
   if (isAudioPlaying) {
     bgAudio.pause();
-
     isAudioPlaying = false;
-
-    audioToggle.classList.remove("playing");
-
-    audioStatus.innerText = "SOUND: OFF";
+    audioToggle?.classList.remove("playing");
+    if (audioStatus) audioStatus.innerText = "SOUND: OFF";
   } else {
     bgAudio
       .play()
       .then(() => {
         isAudioPlaying = true;
-
-        audioToggle.classList.add("playing");
-
-        audioStatus.innerText = "SOUND: ON";
+        audioToggle?.classList.add("playing");
+        if (audioStatus) audioStatus.innerText = "SOUND: ON";
       })
       .catch(() => {});
   }
 }
+audioToggle?.addEventListener("click", toggleAudio);
 
-audioToggle?.addEventListener(
-  "click",
-  toggleAudio
-);
+// 5. High-Precision 10-Second Preloader Loop
+let isPreloaderStarted = false;
+function startPreloader() {
+  if (isPreloaderStarted) return;
+  isPreloaderStarted = true;
 
+  const counterEl = document.getElementById("counter");
+  const barFill = document.querySelector(".bar-fill");
+  const preloader = document.getElementById("preloader");
+  const loaderVideo = document.getElementById("loaderVideo");
 
-// 5. Guaranteed 10-Second Preloader Counter
-(function runPreloaderCounter() {
-  const counterEl =
-    document.getElementById("counter");
-
-  const barFill =
-    document.querySelector(".bar-fill");
-
-  const preloader =
-    document.getElementById("preloader");
-
-  const loaderVideo =
-    document.getElementById("loaderVideo");
+  if (loaderVideo) {
+    loaderVideo.currentTime = 0;
+    loaderVideo.play().catch(() => {});
+  }
 
   let progress = 0;
-
   const totalDuration = 10000;
-
-  const stepTime =
-    totalDuration / 100;
+  const stepTime = totalDuration / 100;
 
   const interval = setInterval(() => {
     progress++;
-
     if (counterEl) {
-      counterEl.innerText =
-        progress < 10
-          ? `0${progress}`
-          : `${progress}`;
+      counterEl.innerText = progress < 10 ? `0${progress}` : `${progress}`;
     }
-
     if (barFill) {
-      barFill.style.width =
-        `${progress}%`;
+      barFill.style.width = `${progress}%`;
     }
 
     if (progress >= 100) {
       clearInterval(interval);
-
       sequence.frame = 0;
-
       render();
 
       gsap.to(preloader, {
         opacity: 0,
         duration: 0.8,
         ease: "power2.out",
-
         onComplete: () => {
-          if (loaderVideo) {
-            loaderVideo.pause();
-          }
-
-          if (preloader) {
-            preloader.style.display = "none";
-          }
-
+          if (loaderVideo) loaderVideo.pause();
+          if (preloader) preloader.style.display = "none";
           ScrollTrigger.refresh();
         },
       });
     }
   }, stepTime);
-})();
-
+}
 
 // 6. Scroll Frame Scrub
 const heroTimeline = gsap.timeline({
@@ -256,50 +171,19 @@ heroTimeline.to(sequence, {
   onUpdate: render,
 });
 
-heroTimeline.from(
-  ".hud-top",
-  {
-    opacity: 0,
-    y: -20,
-    duration: 0.3,
-  },
-  "-=0.3"
-);
-
-heroTimeline.from(
-  ".gemini-glow-card",
-  {
-    opacity: 0,
-    x: -40,
-    duration: 0.3,
-  },
-  "<"
-);
-
-heroTimeline.from(
-  ".hud-right-stats",
-  {
-    opacity: 0,
-    x: 40,
-    duration: 0.3,
-  },
-  "<"
-);
-
+heroTimeline.from(".hud-top", { opacity: 0, y: -20, duration: 0.3 }, "-=0.3");
+heroTimeline.from(".gemini-glow-card", { opacity: 0, x: -40, duration: 0.3 }, "<");
+heroTimeline.from(".hud-right-stats", { opacity: 0, x: 40, duration: 0.3 }, "<");
 
 // 7. About Section Animations
 gsap.fromTo(
   ".about-left",
-  {
-    opacity: 0,
-    y: 30,
-  },
+  { opacity: 0, y: 30 },
   {
     opacity: 1,
     y: 0,
     duration: 0.8,
     ease: "power2.out",
-
     scrollTrigger: {
       trigger: ".about-section",
       start: "top 85%",
@@ -308,19 +192,14 @@ gsap.fromTo(
   }
 );
 
-
 gsap.fromTo(
   ".about-right",
-  {
-    opacity: 0,
-    scale: 0.95,
-  },
+  { opacity: 0, scale: 0.95 },
   {
     opacity: 1,
     scale: 1,
     duration: 0.8,
     ease: "power2.out",
-
     scrollTrigger: {
       trigger: ".about-section",
       start: "top 85%",
@@ -329,1216 +208,522 @@ gsap.fromTo(
   }
 );
 
-
 // 8. 3D Pinned Carousel ScrollTrigger
-const cards =
-  document.querySelectorAll(".card-3d");
-
-const dotsContainer =
-  document.getElementById("cDots");
-
-const activeIdxText =
-  document.getElementById("active-idx");
-
-let carouselProgress = {
-  val: 0,
-};
-
+const cards = document.querySelectorAll(".card-3d");
+const dotsContainer = document.getElementById("cDots");
+const activeIdxText = document.getElementById("active-idx");
+let carouselProgress = { val: 0 };
 
 if (dotsContainer) {
   dotsContainer.innerHTML = "";
-
   cards.forEach((_, i) => {
-    const dot =
-      document.createElement("div");
-
+    const dot = document.createElement("div");
     dot.classList.add("c-dot");
-
-    if (i === 0) {
-      dot.classList.add("active");
-    }
-
-    dot.addEventListener(
-      "click",
-      () => {
-        gsap.to(carouselProgress, {
-          val: i,
-          duration: 0.8,
-          ease: "power2.out",
-          onUpdate:
-            apply3DCardTransforms,
-        });
-      }
-    );
-
+    if (i === 0) dot.classList.add("active");
+    dot.addEventListener("click", () => {
+      gsap.to(carouselProgress, {
+        val: i,
+        duration: 0.8,
+        ease: "power2.out",
+        onUpdate: apply3DCardTransforms,
+      });
+    });
     dotsContainer.appendChild(dot);
   });
 }
 
-
 function apply3DCardTransforms() {
-  const currentIdx =
-    Math.round(carouselProgress.val);
-
-  const clampedIdx =
-    Math.max(
-      0,
-      Math.min(
-        cards.length - 1,
-        currentIdx
-      )
-    );
+  const currentIdx = Math.round(carouselProgress.val);
+  const clampedIdx = Math.max(0, Math.min(cards.length - 1, currentIdx));
 
   if (activeIdxText) {
-    activeIdxText.innerText =
-      (clampedIdx + 1)
-        .toString()
-        .padStart(2, "0");
+    activeIdxText.innerText = (clampedIdx + 1).toString().padStart(2, "0");
   }
 
-  const dots =
-    document.querySelectorAll(".c-dot");
-
+  const dots = document.querySelectorAll(".c-dot");
   dots.forEach((dot, i) => {
-    dot.classList.toggle(
-      "active",
-      i === clampedIdx
-    );
+    dot.classList.toggle("active", i === clampedIdx);
   });
 
   cards.forEach((card, i) => {
-    let offset =
-      i - carouselProgress.val;
-
-    const absOffset =
-      Math.abs(offset);
+    let offset = i - carouselProgress.val;
+    const absOffset = Math.abs(offset);
 
     if (absOffset > 2.5) {
       card.style.opacity = "0";
-
-      card.style.pointerEvents =
-        "none";
-
-      card.style.transform =
-        `translateX(${offset * 380}px) ` +
-        `translateZ(-600px) ` +
-        `rotateY(${offset * -25}deg)`;
+      card.style.pointerEvents = "none";
+      card.style.transform = `translateX(${offset * 380}px) translateZ(-600px) rotateY(${offset * -25}deg)`;
     } else {
-      const isCurrentCenter =
-        absOffset < 0.5;
+      const isCurrentCenter = absOffset < 0.5;
+      card.style.opacity = Math.max(0.3, 1 - absOffset * 0.35);
+      card.style.pointerEvents = "auto";
+      card.style.filter = isCurrentCenter ? "none" : `blur(${absOffset * 2.5}px) brightness(0.65)`;
+      card.style.zIndex = `${100 - Math.round(absOffset * 20)}`;
 
-      card.style.opacity =
-        Math.max(
-          0.3,
-          1 - absOffset * 0.35
-        );
+      const translateX = offset * 330;
+      const translateZ = -absOffset * 160;
+      const rotateY = offset * -26;
 
-      card.style.pointerEvents =
-        "auto";
-
-      card.style.filter =
-        isCurrentCenter
-          ? "none"
-          : `blur(${absOffset * 2.5}px) brightness(0.65)`;
-
-      card.style.zIndex =
-        `${100 - Math.round(absOffset * 20)}`;
-
-      const translateX =
-        offset * 330;
-
-      const translateZ =
-        -absOffset * 160;
-
-      const rotateY =
-        offset * -26;
-
-      card.style.transform =
-        `translateX(${translateX}px) ` +
-        `translateZ(${translateZ}px) ` +
-        `rotateY(${rotateY}deg)`;
+      card.style.transform = `translateX(${translateX}px) translateZ(${translateZ}px) rotateY(${rotateY}deg)`;
     }
   });
 }
 
-
 ScrollTrigger.create({
-  trigger:
-    ".projects-carousel-section",
-
+  trigger: ".projects-carousel-section",
   start: "top top",
-
   end: "+=3500",
-
   pin: true,
-
   scrub: 0.8,
-
   onUpdate: (self) => {
-    carouselProgress.val =
-      self.progress *
-      (cards.length - 1);
-
+    carouselProgress.val = self.progress * (cards.length - 1);
     apply3DCardTransforms();
   },
 });
 
+document.getElementById("nextCard")?.addEventListener("click", () => {
+  const nextVal = Math.min(cards.length - 1, Math.round(carouselProgress.val) + 1);
+  gsap.to(carouselProgress, {
+    val: nextVal,
+    duration: 0.6,
+    ease: "power2.out",
+    onUpdate: apply3DCardTransforms,
+  });
+});
 
-document
-  .getElementById("nextCard")
-  ?.addEventListener(
-    "click",
-    () => {
-      const nextVal =
-        Math.min(
-          cards.length - 1,
-          Math.round(
-            carouselProgress.val
-          ) + 1
-        );
-
-      gsap.to(carouselProgress, {
-        val: nextVal,
-        duration: 0.6,
-        ease: "power2.out",
-        onUpdate:
-          apply3DCardTransforms,
-      });
-    }
-  );
-
-
-document
-  .getElementById("prevCard")
-  ?.addEventListener(
-    "click",
-    () => {
-      const prevVal =
-        Math.max(
-          0,
-          Math.round(
-            carouselProgress.val
-          ) - 1
-        );
-
-      gsap.to(carouselProgress, {
-        val: prevVal,
-        duration: 0.6,
-        ease: "power2.out",
-        onUpdate:
-          apply3DCardTransforms,
-      });
-    }
-  );
-
+document.getElementById("prevCard")?.addEventListener("click", () => {
+  const prevVal = Math.max(0, Math.round(carouselProgress.val) - 1);
+  gsap.to(carouselProgress, {
+    val: prevVal,
+    duration: 0.6,
+    ease: "power2.out",
+    onUpdate: apply3DCardTransforms,
+  });
+});
 
 apply3DCardTransforms();
 
-
 // 9. 3D Project Card Hover Effects
 cards.forEach((card) => {
-  const diagram =
-    card.querySelector(
-      ".banner-diagram"
-    );
+  const diagram = card.querySelector(".banner-diagram");
+  const tags = card.querySelectorAll(".tag-chips span");
+  const btn = card.querySelector(".card-btn");
+  const title = card.querySelector(".card-body h3");
 
-  const tags =
-    card.querySelectorAll(
-      ".tag-chips span"
-    );
+  card.addEventListener("mouseenter", () => {
+    if (parseInt(card.style.zIndex || "0") < 90) return;
 
-  const btn =
-    card.querySelector(
-      ".card-btn"
-    );
+    gsap.to(card, {
+      y: -14,
+      boxShadow: "0 35px 70px rgba(0, 229, 255, 0.25), 0 0 30px rgba(0, 229, 255, 0.2)",
+      borderColor: "#00e5ff",
+      duration: 0.4,
+      ease: "power2.out",
+    });
 
-  const title =
-    card.querySelector(
-      ".card-body h3"
-    );
+    if (diagram) gsap.to(diagram, { scale: 1.1, boxShadow: "0 0 15px rgba(255, 255, 255, 0.6)", duration: 0.3 });
+    if (title) gsap.to(title, { color: "#00e5ff", x: 4, duration: 0.3 });
+    if (tags.length) gsap.to(tags, { y: -3, borderColor: "rgba(0, 229, 255, 0.6)", backgroundColor: "rgba(0, 229, 255, 0.12)", stagger: 0.04, duration: 0.25 });
+    if (btn) gsap.to(btn, { scale: 1.05, backgroundColor: "#00e5ff", color: "#000", boxShadow: "0 0 15px rgba(0, 229, 255, 0.5)", duration: 0.3 });
+  });
 
-
-  card.addEventListener(
-    "mouseenter",
-    () => {
-      if (
-        parseInt(
-          card.style.zIndex || "0"
-        ) < 9
-      ) {
-        return;
-      }
-
-      gsap.to(card, {
-        y: -14,
-
-        boxShadow:
-          "0 35px 70px rgba(0, 229, 255, 0.25), " +
-          "0 0 30px rgba(0, 229, 255, 0.2)",
-
-        borderColor:
-          "#00e5ff",
-
-        duration: 0.4,
-
-        ease: "power2.out",
-      });
-
-
-      if (diagram) {
-        gsap.to(diagram, {
-          scale: 1.1,
-
-          boxShadow:
-            "0 0 15px rgba(255, 255, 255, 0.6)",
-
-          duration: 0.3,
-        });
-      }
-
-
-      if (title) {
-        gsap.to(title, {
-          color: "#00e5ff",
-          x: 4,
-          duration: 0.3,
-        });
-      }
-
-
-      if (tags.length) {
-        gsap.to(tags, {
-          y: -3,
-
-          borderColor:
-            "rgba(0, 229, 255, 0.6)",
-
-          backgroundColor:
-            "rgba(0, 229, 255, 0.12)",
-
-          stagger: 0.04,
-
-          duration: 0.25,
-        });
-      }
-
-
-      if (btn) {
-        gsap.to(btn, {
-          scale: 1.05,
-
-          backgroundColor:
-            "#00e5ff",
-
-          color: "#000",
-
-          boxShadow:
-            "0 0 15px rgba(0, 229, 255, 0.5)",
-
-          duration: 0.3,
-        });
-      }
-    }
-  );
-
-
-  card.addEventListener(
-    "mouseleave",
-    () => {
-      gsap.to(card, {
-        y: 0,
-
-        boxShadow:
-          "0 30px 60px rgba(0, 0, 0, 0.85)",
-
-        borderColor:
-          "rgba(0, 229, 255, 0.2)",
-
-        duration: 0.4,
-      });
-
-
-      if (diagram) {
-        gsap.to(diagram, {
-          scale: 1,
-          boxShadow: "none",
-          duration: 0.3,
-        });
-      }
-
-
-      if (title) {
-        gsap.to(title, {
-          color: "#ffffff",
-          x: 0,
-          duration: 0.3,
-        });
-      }
-
-
-      if (tags.length) {
-        gsap.to(tags, {
-          y: 0,
-
-          borderColor:
-            "rgba(255, 255, 255, 0.1)",
-
-          backgroundColor:
-            "rgba(255, 255, 255, 0.06)",
-
-          stagger: 0.02,
-
-          duration: 0.25,
-        });
-      }
-
-
-      if (btn) {
-        gsap.to(btn, {
-          scale: 1,
-
-          backgroundColor:
-            "transparent",
-
-          color: "#00e5ff",
-
-          boxShadow: "none",
-
-          duration: 0.3,
-        });
-      }
-    }
-  );
+  card.addEventListener("mouseleave", () => {
+    gsap.to(card, { y: 0, boxShadow: "0 30px 60px rgba(0, 0, 0, 0.85)", borderColor: "rgba(0, 229, 255, 0.2)", duration: 0.4 });
+    if (diagram) gsap.to(diagram, { scale: 1, boxShadow: "none", duration: 0.3 });
+    if (title) gsap.to(title, { color: "#ffffff", x: 0, duration: 0.3 });
+    if (tags.length) gsap.to(tags, { y: 0, borderColor: "rgba(255, 255, 255, 0.1)", backgroundColor: "rgba(255, 255, 255, 0.06)", stagger: 0.02, duration: 0.25 });
+    if (btn) gsap.to(btn, { scale: 1, backgroundColor: "transparent", color: "#00e5ff", boxShadow: "none", duration: 0.3 });
+  });
 });
 
-
 // 10. Tilt Init
-VanillaTilt.init(
-  document.querySelectorAll(
-    "[data-tilt]"
-  ),
-  {
-    max: 15,
-    speed: 400,
-    glare: true,
-    "max-glare": 0.4,
-  }
-);
-
+VanillaTilt.init(document.querySelectorAll("[data-tilt]"), {
+  max: 15,
+  speed: 400,
+  glare: true,
+  "max-glare": 0.4,
+});
 
 // 11. Form Submission Animation
 function handleFormSubmit() {
-  const submitBtn =
-    document.getElementById(
-      "submitBtn"
-    );
-
-  const btnText =
-    submitBtn.querySelector(
-      ".btn-text"
-    );
-
-  btnText.innerText =
-    "ENCRYPTING & TRANSMITTING...";
-
-  submitBtn.style.pointerEvents =
-    "none";
-
+  const submitBtn = document.getElementById("submitBtn");
+  const btnText = submitBtn?.querySelector(".btn-text");
+  if (btnText) btnText.innerText = "ENCRYPTING & TRANSMITTING...";
+  if (submitBtn) submitBtn.style.pointerEvents = "none";
 
   setTimeout(() => {
-    submitBtn.classList.add(
-      "success"
-    );
-
-    btnText.innerText =
-      "TRANSMISSION RECEIVED ✓";
-
+    submitBtn?.classList.add("success");
+    if (btnText) btnText.innerText = "TRANSMISSION RECEIVED ✓";
 
     setTimeout(() => {
-      document
-        .getElementById(
-          "contactForm"
-        )
-        .reset();
-
-      submitBtn.classList.remove(
-        "success"
-      );
-
-      btnText.innerText =
-        "TRANSMIT MESSAGE";
-
-      submitBtn.style.pointerEvents =
-        "auto";
+      document.getElementById("contactForm")?.reset();
+      submitBtn?.classList.remove("success");
+      if (btnText) btnText.innerText = "TRANSMIT MESSAGE";
+      if (submitBtn) submitBtn.style.pointerEvents = "auto";
     }, 3000);
   }, 1200);
 }
 
-
-// ================= MY TOOLKIT INTERACTIVE ENGINE =================
-
+// ================= PARTICLE TEXT MORPHING ENGINE =================
 const toolkitData = [
-  {
-    text: "AI",
-    sub: "INTELLIGENCE // AGENTS",
-  },
-  {
-    text: "WEB",
-    sub: "REACT // ARCHITECTURE",
-  },
-  {
-    text: "APP",
-    sub: "MOBILE // REACT NATIVE",
-  },
-  {
-    text: "API",
-    sub: "BACKEND // REALTIME",
-  },
+  { word: "AI", sub: "INTELLIGENCE // AGENTS" },
+  { word: "WEB", sub: "REACT // ARCHITECTURE" },
+  { word: "APP", sub: "MOBILE // REACT NATIVE" },
+  { word: "API", sub: "BACKEND // REALTIME" },
 ];
 
+const tNavBtns = document.querySelectorAll(".t-nav-btn");
+const tPanels = document.querySelectorAll(".toolkit-panel");
+const giantSub = document.getElementById("toolkitGiantSub");
+const tCanvas = document.getElementById("toolkitCanvas");
+let tCtx = tCanvas ? tCanvas.getContext("2d") : null;
 
-const tNavBtns =
-  document.querySelectorAll(
-    ".t-nav-btn"
-  );
+let tWidth = 0;
+let tHeight = 0;
+const PARTICLE_COUNT = 2400;
+const morphParticles = [];
+let activeMorphWord = "AI";
 
-const tPanels =
-  document.querySelectorAll(
-    ".toolkit-panel"
-  );
-
-const giantText =
-  document.getElementById(
-    "toolkitGiantText"
-  );
-
-const giantSub =
-  document.getElementById(
-    "toolkitGiantSub"
-  );
-
-
-function switchToolkitTab(index) {
-  tNavBtns.forEach((btn, i) => {
-    btn.classList.toggle(
-      "active",
-      i === index
-    );
-  });
-
-
-  if (giantText && giantSub) {
-    gsap.to(
-      [giantText, giantSub],
-      {
-        opacity: 0,
-        scale: 0.8,
-        duration: 0.2,
-        ease: "power2.in",
-
-        onComplete: () => {
-          giantText.innerText =
-            toolkitData[index].text;
-
-          giantSub.innerText =
-            toolkitData[index].sub;
-
-
-          gsap.to(
-            [giantText, giantSub],
-            {
-              opacity: 1,
-              scale: 1,
-              duration: 0.35,
-              ease: "back.out(1.7)",
-            }
-          );
-        },
-      }
-    );
+class MorphParticle {
+  constructor(w, h) {
+    this.x = Math.random() * (w || 400);
+    this.y = Math.random() * (h || 400);
+    this.targetX = this.x;
+    this.targetY = this.y;
+    this.size = 1.8;
+    this.alpha = 0;
+    this.targetAlpha = 0;
+    this.ease = 0.08 + Math.random() * 0.04;
+    this.baseColor = Math.random() > 0.3 ? "0, 229, 255" : "255, 255, 255";
   }
 
+  update() {
+    this.x += (this.targetX - this.x) * this.ease;
+    this.y += (this.targetY - this.y) * this.ease;
+    this.alpha += (this.targetAlpha - this.alpha) * this.ease;
+  }
 
-  tPanels.forEach(
-    (panel, i) => {
-      if (i === index) {
-        panel.classList.add(
-          "active"
-        );
-
-        const chips =
-          panel.querySelectorAll(
-            ".t-chip"
-          );
-
-        gsap.fromTo(
-          chips,
-          {
-            opacity: 0,
-            y: 10,
-          },
-          {
-            opacity: 1,
-            y: 0,
-            stagger: 0.04,
-            duration: 0.3,
-            ease: "power2.out",
-          }
-        );
-      } else {
-        panel.classList.remove(
-          "active"
-        );
-      }
-    }
-  );
+  draw(ctx) {
+    if (this.alpha <= 0.02) return;
+    ctx.fillStyle = `rgba(${this.baseColor}, ${this.alpha})`;
+    ctx.fillRect(this.x, this.y, this.size, this.size);
+  }
 }
 
+function sampleTextCoordinates(text, w, h) {
+  const offCanvas = document.createElement("canvas");
+  const offCtx = offCanvas.getContext("2d");
+  offCanvas.width = w;
+  offCanvas.height = h;
 
-tNavBtns.forEach(
-  (btn, i) => {
-    btn.addEventListener(
-      "click",
-      () => {
-        switchToolkitTab(i);
+  offCtx.fillStyle = "#ffffff";
+  const fontSize = text.length > 2 ? Math.min(w / 3.4, 130) : Math.min(w / 2.6, 160);
+  offCtx.font = `900 ${fontSize}px 'Space Grotesk', sans-serif`;
+  offCtx.textAlign = "center";
+  offCtx.textBaseline = "middle";
+  if (offCtx.letterSpacing !== undefined) offCtx.letterSpacing = "10px";
+  offCtx.fillText(text, w / 2, h / 2 - 25);
+
+  const imgData = offCtx.getImageData(0, 0, w, h).data;
+  const coords = [];
+  const step = 3;
+
+  for (let y = 0; y < h; y += step) {
+    for (let x = 0; x < w; x += step) {
+      const index = (y * w + x) * 4;
+      if (imgData[index + 3] > 140) {
+        coords.push({ x, y });
       }
-    );
+    }
   }
-);
+  return coords;
+}
 
-
-// Toolkit Particles
-(function initToolkitParticles() {
-  const tCanvas =
-    document.getElementById(
-      "toolkitCanvas"
-    );
-
+function morphToWord(word) {
+  activeMorphWord = word;
   if (!tCanvas) return;
 
-  const tCtx =
-    tCanvas.getContext("2d");
+  const coords = sampleTextCoordinates(word, tWidth, tHeight);
 
+  morphParticles.forEach((p, i) => {
+    if (i < coords.length) {
+      p.targetX = coords[i].x;
+      p.targetY = coords[i].y;
+      p.targetAlpha = 0.95;
+    } else {
+      const angle = Math.random() * Math.PI * 2;
+      const radius = Math.max(tWidth, tHeight) * 0.7;
+      p.targetX = tWidth / 2 + Math.cos(angle) * radius;
+      p.targetY = tHeight / 2 + Math.sin(angle) * radius;
+      p.targetAlpha = 0;
+    }
+  });
+}
 
-  let w =
-    (tCanvas.width =
-      tCanvas.offsetWidth ||
-      400);
+function resizeToolkitCanvas() {
+  if (!tCanvas) return;
+  const rect = tCanvas.parentElement.getBoundingClientRect();
+  tWidth = tCanvas.width = rect.width;
+  tHeight = tCanvas.height = rect.height;
 
-  let h =
-    (tCanvas.height =
-      tCanvas.offsetHeight ||
-      400);
+  if (morphParticles.length === 0) {
+    for (let i = 0; i < PARTICLE_COUNT; i++) {
+      morphParticles.push(new MorphParticle(tWidth, tHeight));
+    }
+  }
+  morphToWord(activeMorphWord);
+}
 
+function renderParticleMorph() {
+  if (tCtx && tCanvas) {
+    tCtx.fillStyle = "rgba(3, 6, 17, 0.35)";
+    tCtx.fillRect(0, 0, tWidth, tHeight);
 
-  const particles = [];
+    for (let i = 0; i < morphParticles.length; i++) {
+      morphParticles[i].update();
+      morphParticles[i].draw(tCtx);
+    }
+  }
+  requestAnimationFrame(renderParticleMorph);
+}
 
-  const particleCount = 45;
+function switchToolkitTab(index) {
+  const targetIndex = parseInt(index, 10);
+  tNavBtns.forEach((btn, i) => btn.classList.toggle("active", i === targetIndex));
 
+  const item = toolkitData[targetIndex];
+  if (item) {
+    morphToWord(item.word);
+    if (giantSub) {
+      gsap.to(giantSub, {
+        opacity: 0,
+        y: 6,
+        duration: 0.2,
+        onComplete: () => {
+          giantSub.innerText = item.sub;
+          gsap.to(giantSub, { opacity: 1, y: 0, duration: 0.3 });
+        },
+      });
+    }
+  }
 
-  for (
-    let i = 0;
-    i < particleCount;
-    i++
-  ) {
-    particles.push({
-      x: Math.random() * w,
-      y: Math.random() * h,
+  tPanels.forEach((panel, i) => {
+    if (i === targetIndex) {
+      panel.classList.add("active");
+      const chips = panel.querySelectorAll(".t-chip");
+      gsap.fromTo(chips, { opacity: 0, y: 10 }, { opacity: 1, y: 0, stagger: 0.04, duration: 0.3, ease: "power2.out" });
+    } else {
+      panel.classList.remove("active");
+    }
+  });
+}
 
-      vx:
-        (Math.random() - 0.5) *
-        0.6,
+tNavBtns.forEach((btn) => {
+  btn.addEventListener("click", (e) => {
+    e.preventDefault();
+    const tabIdx = btn.getAttribute("data-tab");
+    switchToolkitTab(tabIdx);
+  });
+});
 
-      vy:
-        (Math.random() - 0.5) *
-        0.6,
+window.addEventListener("resize", resizeToolkitCanvas);
 
-      size:
-        Math.random() * 2 + 1,
+if (tCanvas) {
+  resizeToolkitCanvas();
+  renderParticleMorph();
+}
 
-      alpha:
-        Math.random() * 0.6 + 0.2,
+gsap.from(".toolkit-left", {
+  scrollTrigger: { trigger: ".toolkit-section", start: "top 80%", once: true },
+  opacity: 0,
+  x: -40,
+  duration: 0.8,
+  ease: "power3.out",
+});
+
+gsap.from(".toolkit-right", {
+  scrollTrigger: { trigger: ".toolkit-section", start: "top 80%", once: true },
+  opacity: 0,
+  scale: 0.95,
+  duration: 0.8,
+  ease: "power3.out",
+});
+
+// ================= GSAP FLIP MODAL CONTROLLER =================
+const modal = document.getElementById("projectModal");
+const modalSlot = document.getElementById("modalSlot");
+const closeModalBtn = document.getElementById("closeProjectModal");
+let activeSourceCard = null;
+
+function openCardModal(card) {
+  if (modal.classList.contains("active")) return;
+  activeSourceCard = card;
+
+  modalSlot.innerHTML = "";
+  const clonedCard = card.cloneNode(true);
+  clonedCard.classList.add("flipped-active");
+
+  const clonedBtn = clonedCard.querySelector(".card-footer");
+  if (clonedBtn) clonedBtn.remove();
+
+  modalSlot.appendChild(clonedCard);
+  const state = Flip.getState(clonedCard, { props: "borderRadius,boxShadow" });
+
+  modal.classList.add("active");
+  Flip.from(state, {
+    targets: clonedCard,
+    duration: 0.55,
+    ease: "power3.out",
+    scale: true,
+  });
+}
+
+function closeCardModal() {
+  if (!modal.classList.contains("active")) return;
+  const clonedCard = modalSlot.querySelector(".card-3d");
+  if (!clonedCard || !activeSourceCard) {
+    modal.classList.remove("active");
+    return;
+  }
+
+  gsap.to(clonedCard, {
+    opacity: 0,
+    scale: 0.9,
+    duration: 0.3,
+    ease: "power2.in",
+    onComplete: () => {
+      modal.classList.remove("active");
+      modalSlot.innerHTML = "";
+      activeSourceCard = null;
+    },
+  });
+}
+
+document.querySelectorAll(".card-btn").forEach((btn, index) => {
+  btn.addEventListener("click", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const targetCard = cards[index];
+    if (targetCard) openCardModal(targetCard);
+  });
+});
+
+cards.forEach((card, index) => {
+  card.addEventListener("click", (e) => {
+    if (e.target.closest(".card-btn")) return;
+    const currentCenter = Math.round(carouselProgress.val);
+    if (currentCenter === index) {
+      openCardModal(card);
+    } else {
+      gsap.to(carouselProgress, {
+        val: index,
+        duration: 0.5,
+        ease: "power2.out",
+        onUpdate: apply3DCardTransforms,
+        onComplete: () => {
+          openCardModal(card);
+        },
+      });
+    }
+  });
+});
+
+closeModalBtn?.addEventListener("click", (e) => {
+  e.preventDefault();
+  closeCardModal();
+});
+
+modal?.addEventListener("click", (e) => {
+  if (e.target === modal) closeCardModal();
+});
+
+window.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") closeCardModal();
+});
+
+// ================= NATIVE MICROPHONE GATE & CONTROLLER =================
+const mediaGate = document.getElementById("mediaGate");
+const btnGrantMedia = document.getElementById("btnGrantMedia");
+const btnSkipMedia = document.getElementById("btnSkipMedia");
+
+function dismissMediaGateAndStart(audioEnabled) {
+  if (mediaGate) {
+    gsap.to(mediaGate, {
+      opacity: 0,
+      duration: 0.4,
+      ease: "power2.out",
+      onComplete: () => {
+        mediaGate.style.display = "none";
+        mediaGate.classList.remove("active");
+      },
     });
   }
 
-
-  function draw() {
-    tCtx.clearRect(
-      0,
-      0,
-      w,
-      h
-    );
-
-
-    particles.forEach(
-      (p) => {
-        p.x += p.vx;
-        p.y += p.vy;
-
-
-        if (p.x < 0) {
-          p.x = w;
-        }
-
-        if (p.x > w) {
-          p.x = 0;
-        }
-
-        if (p.y < 0) {
-          p.y = h;
-        }
-
-        if (p.y > h) {
-          p.y = 0;
-        }
-
-
-        tCtx.fillStyle =
-          `rgba(0, 229, 255, ${p.alpha})`;
-
-        tCtx.beginPath();
-
-        tCtx.arc(
-          p.x,
-          p.y,
-          p.size,
-          0,
-          Math.PI * 2
-        );
-
-        tCtx.fill();
-      }
-    );
-
-
-    requestAnimationFrame(draw);
+  if (audioEnabled) {
+    playAudioStream();
+  } else {
+    if (audioStatus) audioStatus.innerText = "SOUND: OFF";
   }
 
-
-  window.addEventListener(
-    "resize",
-    () => {
-      w =
-        tCanvas.width =
-          tCanvas.offsetWidth;
-
-      h =
-        tCanvas.height =
-          tCanvas.offsetHeight;
-    }
-  );
-
-
-  draw();
-})();
-
-
-gsap.from(
-  ".toolkit-left",
-  {
-    scrollTrigger: {
-      trigger:
-        ".toolkit-section",
-      start: "top 80%",
-      once: true,
-    },
-
-    opacity: 0,
-    x: -40,
-    duration: 0.8,
-    ease: "power3.out",
-  }
-);
-
-
-gsap.from(
-  ".toolkit-right",
-  {
-    scrollTrigger: {
-      trigger:
-        ".toolkit-section",
-      start: "top 80%",
-      once: true,
-    },
-
-    opacity: 0,
-    scale: 0.95,
-    duration: 0.8,
-    ease: "power3.out",
-  }
-);
-
-
-// ================= ROBUST GSAP FLIP MODAL CONTROLLER =================
-
-const modal =
-  document.getElementById(
-    "projectModal"
-  );
-
-const modalSlot =
-  document.getElementById(
-    "modalSlot"
-  );
-
-const closeModalBtn =
-  document.getElementById(
-    "closeProjectModal"
-  );
-
-let activeSourceCard = null;
-
-
-function openCardModal(card) {
-  if (
-    modal.classList.contains(
-      "active"
-    )
-  ) {
-    return;
-  }
-
-  activeSourceCard = card;
-
-
-  // 1. Clear previous modal contents
-  modalSlot.innerHTML = "";
-
-
-  // 2. Clone the card into the modal slot
-  const clonedCard =
-    card.cloneNode(true);
-
-  clonedCard.classList.add(
-    "flipped-active"
-  );
-
-
-  // Remove explore button from inside modal
-  const clonedBtn =
-    clonedCard.querySelector(
-      ".card-footer"
-    );
-
-  if (clonedBtn) {
-    clonedBtn.remove();
-  }
-
-
-  modalSlot.appendChild(
-    clonedCard
-  );
-
-
-  // 3. Capture start bounds from original 3D card
-  const state =
-    Flip.getState(
-      clonedCard,
-      {
-        props:
-          "borderRadius,boxShadow",
-      }
-    );
-
-
-  // Position clone over original card before opening
-  modal.classList.add(
-    "active"
-  );
-
-
-  Flip.from(
-    state,
-    {
-      targets:
-        clonedCard,
-
-      duration: 0.55,
-
-      ease:
-        "power3.out",
-
-      scale: true,
-    }
-  );
+  startPreloader();
 }
-
-
-function closeCardModal() {
-  if (
-    !modal.classList.contains(
-      "active"
-    )
-  ) {
-    return;
-  }
-
-
-  const clonedCard =
-    modalSlot.querySelector(
-      ".card-3d"
-    );
-
-
-  if (
-    !clonedCard ||
-    !activeSourceCard
-  ) {
-    modal.classList.remove(
-      "active"
-    );
-
-    return;
-  }
-
-
-  gsap.to(
-    clonedCard,
-    {
-      opacity: 0,
-      scale: 0.9,
-      duration: 0.3,
-      ease: "power2.in",
-
-      onComplete: () => {
-        modal.classList.remove(
-          "active"
-        );
-
-        modalSlot.innerHTML =
-          "";
-
-        activeSourceCard =
-          null;
-      },
-    }
-  );
-}
-
-
-// Bind direct clicks to ALL Explore buttons and Cards
-document
-  .querySelectorAll(
-    ".card-btn"
-  )
-  .forEach(
-    (btn, index) => {
-      btn.addEventListener(
-        "click",
-        (e) => {
-          e.preventDefault();
-
-          e.stopPropagation();
-
-          const targetCard =
-            cards[index];
-
-          if (targetCard) {
-            openCardModal(
-              targetCard
-            );
-          }
-        }
-      );
-    }
-  );
-
-
-cards.forEach(
-  (card) => {
-    card.addEventListener(
-      "click",
-      (e) => {
-        if (
-          e.target.closest(
-            ".card-btn"
-          )
-        ) {
-          return;
-        }
-
-        openCardModal(card);
-      }
-    );
-  }
-);
-
-
-closeModalBtn?.addEventListener(
-  "click",
-  (e) => {
-    e.preventDefault();
-
-    closeCardModal();
-  }
-);
-
-
-modal?.addEventListener(
-  "click",
-  (e) => {
-    if (e.target === modal) {
-      closeCardModal();
-    }
-  }
-);
-
-
-window.addEventListener(
-  "keydown",
-  (e) => {
-    if (e.key === "Escape") {
-      closeCardModal();
-    }
-  }
-);
-
-
-// ------------------------------------------------------------
-// MICROPHONE PERMISSION GATE
-// ------------------------------------------------------------
-
-const mediaGate =
-  document.getElementById(
-    "mediaGate"
-  );
-
-const btnGrantMedia =
-  document.getElementById(
-    "btnGrantMedia"
-  );
-
-const btnSkipMedia =
-  document.getElementById(
-    "btnSkipMedia"
-  );
-
-
-// ------------------------------------------------------------
-// CHECK EXISTING MICROPHONE PERMISSION
-// ------------------------------------------------------------
 
 async function checkMicrophonePermission() {
-  if (
-    !mediaGate ||
-    !navigator.permissions
-  ) {
-    return;
-  }
-
-
   try {
-    const permission =
-      await navigator.permissions.query(
-        {
-          name: "microphone",
-        }
-      );
+    if (navigator.permissions && navigator.permissions.query) {
+      const permission = await navigator.permissions.query({ name: "microphone" });
 
-
-    // If permission was already granted,
-    // hide the modal immediately after refresh.
-    if (
-      permission.state ===
-      "granted"
-    ) {
-      mediaGate.style.display =
-        "none";
-
-      mediaGate.classList.remove(
-        "active"
-      );
-    }
-
-
-    // Watch for future permission changes.
-    permission.onchange =
-      () => {
-        if (
-          permission.state ===
-          "granted"
-        ) {
-          mediaGate.style.display =
-            "none";
-
-          mediaGate.classList.remove(
-            "active"
-          );
-        }
-      };
-  } catch (error) {
-    console.log(
-      "Could not check microphone permission:",
-      error
-    );
-  }
-}
-
-
-// Check permission as soon as main.js loads.
-checkMicrophonePermission();
-
-
-// ------------------------------------------------------------
-// ENABLE MICROPHONE
-// ------------------------------------------------------------
-
-if (btnGrantMedia) {
-
-  btnGrantMedia.addEventListener(
-    "click",
-    async function (event) {
-
-      event.preventDefault();
-
-      event.stopPropagation();
-
-
-      console.log(
-        "ENABLE MICROPHONE CLICK"
-      );
-
-
-      // Make sure the browser supports getUserMedia.
-      if (
-        !navigator.mediaDevices ||
-        !navigator.mediaDevices
-          .getUserMedia
-      ) {
-        console.error(
-          "Microphone access is not supported by this browser."
-        );
-
+      if (permission.state === "granted") {
+        if (mediaGate) mediaGate.style.display = "none";
+        dismissMediaGateAndStart(true);
         return;
       }
 
-
-      try {
-
-        // IMPORTANT:
-        // getUserMedia() is called directly
-        // from the user's button click.
-        //
-        // This allows Chrome to show:
-        // "Allow this site to use your microphone?"
-        //
-        const stream =
-          await navigator.mediaDevices.getUserMedia(
-            {
-              audio: true,
-            }
-          );
-
-
-        console.log(
-          "MICROPHONE PERMISSION GRANTED"
-        );
-
-
-        // We only need to obtain permission.
-        // Stop the temporary microphone stream.
-        stream
-          .getTracks()
-          .forEach(
-            (track) => {
-              track.stop();
-            }
-          );
-
-
-        // ----------------------------------------------------
-        // CLOSE MODAL
-        // ----------------------------------------------------
-
-        if (mediaGate) {
-
-          mediaGate.style.display =
-            "none";
-
-          mediaGate.classList.remove(
-            "active"
-          );
+      permission.onchange = () => {
+        if (permission.state === "granted") {
+          dismissMediaGateAndStart(true);
         }
-
-
-        // ----------------------------------------------------
-        // REFRESH PAGE
-        // ----------------------------------------------------
-
-        // Give the browser a very small amount of time
-        // to apply the modal close before refreshing.
-        setTimeout(
-          () => {
-            window.location.reload();
-          },
-          150
-        );
-
-      } catch (error) {
-
-        console.error(
-          "MICROPHONE PERMISSION ERROR:",
-          error
-        );
-
-
-        // User clicked Block/Deny/Cancel.
-        // Keep the modal open.
-        if (mediaGate) {
-          mediaGate.style.display =
-            "";
-        }
-      }
+      };
     }
-  );
+  } catch (error) {
+    console.log("Could not query microphone permission directly:", error);
+  }
 
-} else {
-
-  console.error(
-    "ERROR: #btnGrantMedia NOT FOUND"
-  );
-
+  if (mediaGate) {
+    mediaGate.style.display = "flex";
+  }
 }
 
+// Trigger initial check
+checkMicrophonePermission();
 
-// ------------------------------------------------------------
-// SKIP BUTTON
-// ------------------------------------------------------------
+// Enable Microphone button handler
+if (btnGrantMedia) {
+  btnGrantMedia.addEventListener("click", async function (event) {
+    event.preventDefault();
+    event.stopPropagation();
 
-if (btnSkipMedia) {
-
-  btnSkipMedia.addEventListener(
-    "click",
-    function (event) {
-
-      event.preventDefault();
-
-      event.stopPropagation();
-
-
-      console.log(
-        "SKIP CLICK"
-      );
-
-
-      // Close the microphone modal.
-      if (mediaGate) {
-
-        mediaGate.style.display =
-          "none";
-
-        mediaGate.classList.remove(
-          "active"
-        );
-      }
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      dismissMediaGateAndStart(false);
+      return;
     }
-  );
 
-} else {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      stream.getTracks().forEach((track) => track.stop());
+      dismissMediaGateAndStart(true);
+    } catch (error) {
+      console.warn("Microphone access denied by user:", error);
+      dismissMediaGateAndStart(false);
+    }
+  });
+}
 
-  console.error(
-    "ERROR: #btnSkipMedia NOT FOUND"
-  );
-
+// Skip button handler
+if (btnSkipMedia) {
+  btnSkipMedia.addEventListener("click", function (event) {
+    event.preventDefault();
+    event.stopPropagation();
+    dismissMediaGateAndStart(false);
+  });
 }

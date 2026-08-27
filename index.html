@@ -3,6 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Browser Favicons -->
+<link rel="icon" type="image/svg+xml" href="public/favicon.svg" />
+<link rel="icon" type="image/png" sizes="32x32" href="public/frames/frame_0449.webp" />
+<link rel="apple-touch-icon" href="public/frames/frame_0449.webp" />
   <title>SRIKRISHNA T | Senior Full Stack Developer</title>
   <link rel="stylesheet" href="style.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -97,7 +101,7 @@
             <button
                 type="button"
                 id="btnGrantMedia">
-                ENABLE MICROPHONE
+                ENABLE SOUND FOR BETTER EXPERIENCE
             </button>
 
             <button
@@ -545,21 +549,21 @@
     </div>
   </section>
 
-<!-- ================= MY TOOLKIT SECTION ================= -->
+<!-- ================= MY TOOLKIT SECTION WITH PARTICLE TEXT MORPH ================= -->
   <section id="toolkit" class="toolkit-section">
     <div class="toolkit-container">
       
-      <!-- Left Column: Title & Interactive Category Badges -->
+      <!-- Left Column: Title & Interactive Category Switcher -->
       <div class="toolkit-left">
         <div class="sec-tag">CAPABILITIES & ARSENAL</div>
         <h2 class="toolkit-serif-title">My Toolkit.</h2>
         
         <!-- Interactive Category Switcher Nav -->
         <div class="toolkit-tabs-nav">
-          <button class="t-nav-btn active" data-tab="0">01 // AI PROMPT & ENG</button>
-          <button class="t-nav-btn" data-tab="1">02 // FRONTEND</button>
-          <button class="t-nav-btn" data-tab="2">03 // MOBILE</button>
-          <button class="t-nav-btn" data-tab="3">04 // BACKEND</button>
+          <button type="button" class="t-nav-btn active" data-tab="0" data-word="AI">01 // AI PROMPT & ENG</button>
+          <button type="button" class="t-nav-btn" data-tab="1" data-word="WEB">02 // FRONTEND</button>
+          <button type="button" class="t-nav-btn" data-tab="2" data-word="APP">03 // MOBILE</button>
+          <button type="button" class="t-nav-btn" data-tab="3" data-word="API">04 // BACKEND</button>
         </div>
 
         <!-- Dynamic Category Content Panels -->
@@ -635,25 +639,19 @@
         </div>
       </div>
 
-      <!-- Right Column: Animated Typography & Particle Matrix Screen -->
+      <!-- Right Column: Canvas Particle Morphing Display Screen -->
       <div class="toolkit-right">
         <div class="toolkit-screen-frame" data-tilt data-tilt-max="6" data-tilt-glare data-tilt-max-glare="0.2">
-          
-          <!-- Corner Framing Reticles -->
+          <!-- Reticles -->
           <div class="frame-reticle reticle-tl"></div>
           <div class="frame-reticle reticle-tr"></div>
           <div class="frame-reticle reticle-bl"></div>
           <div class="frame-reticle reticle-br"></div>
 
-          <!-- Background Canvas for Particle Glow -->
+          <!-- Particle Text Morph Canvas -->
           <canvas id="toolkitCanvas"></canvas>
 
-          <!-- Large Center Animated Category Text -->
-          <div class="toolkit-big-display">
-            <h1 class="t-giant-text" id="toolkitGiantText">AI</h1>
-            <span class="t-giant-sub" id="toolkitGiantSub">INTELLIGENCE // AGENTS</span>
-          </div>
-
+          <div class="toolkit-sub-badge" id="toolkitGiantSub">INTELLIGENCE // AGENTS</div>
           <div class="screen-scanline"></div>
         </div>
       </div>
